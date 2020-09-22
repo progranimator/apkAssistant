@@ -1,2 +1,9 @@
 # UnrealtoAndroid v1.1
 Python script designed to increase the speed of pushing android files to their corresponding devices.
+
+# UnrealtoAndroid v1.2
+features added to v1.2 : 
+- UI includes 2 additional buttons : 'Enter name of .apk' and 'Enter Location of UnrealtoAndroid.txt'
+- main window includes black borders 
+- trash icon and .apk download icon 
+- question icon leads to information window detailing FAQs related to script
