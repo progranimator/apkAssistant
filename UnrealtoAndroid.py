@@ -11,7 +11,7 @@ class App(QWidget):
 
     def __init__(self):
         super().__init__()
-        self.title = 'UnrealtoAndroid v1.1'
+        self.title = 'UnrealtoAndroid v1.3'
         self.left = 10
         self.top = 10
         self.setFixedSize(500, 700)
@@ -21,27 +21,30 @@ class App(QWidget):
         #
 
     def initUI(self):
-
-        #create window for buttons
+        # Create window for buttons #
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         #
 
-        #create textboxes
+        # Create textboxes #
         self.textbox = QLineEdit(self)
-        self.textbox.move(50, 130)
-        self.textbox.resize(400,30)
+        self.textbox.move(250, 145)
+        self.textbox.resize(200,30)
 
         self.textbox1 = QLineEdit(self)
-        self.textbox1.move(50, 320)
+        self.textbox1.move(50, 340)
         self.textbox1.resize(400,30)
 
         self.textbox2 = QLineEdit(self)
         self.textbox2.move(45, 540)
         self.textbox2.resize(400,30)
+
+        self.textboxFolderRoot = QLineEdit(self)
+        self.textboxFolderRoot.move(45,145)
+        self.textboxFolderRoot.resize(165,30)
         #
 
-        # create lines
+        # Create lines #
         line1 = QLabel(self)
         pixmap = QPixmap('C:/Users/progr/Creative Cloud Files/Images/Textures/flat smoky black')
         line1.setPixmap(pixmap)
@@ -61,7 +64,7 @@ class App(QWidget):
         line3.move(-300,480)
         #
 
-        #create borders + dropshadows + icons
+        # Create borders + dropshadows + icons #
         leftBorder = QLabel(self)
         pixmap = QPixmap('C:/Users/progr/Creative Cloud Files/Images/Textures/flat smoky black')
         leftBorder.setPixmap(pixmap)
@@ -129,9 +132,9 @@ class App(QWidget):
         pushIcon.move(268,20)
         #
 
-        # Create buttons
-        button1 = QPushButton('^ ^ Enter Folder Location of .apk ^ ^', self)
-        button1.move(108,185)
+        # Create buttons #
+        button1 = QPushButton('^ ^ Folder Root ^ ^', self)
+        button1.move(260,185)
         button1.setStyleSheet("background-color : white")
 
         button2 = QPushButton('Delete Android Folder', self)
@@ -150,9 +153,13 @@ class App(QWidget):
         button4.move(135,380)
         button4.setStyleSheet("background-color : white")
 
-        button5 = QPushButton('^ ^ Enter Location of UnrealtoAndroid.txt ^ ^', self)
-        button5.move(70,600)
+        button5 = QPushButton('^ ^ Write to UnrealtoAndroid.txt ^ ^', self)
+        button5.move(105,580)
         button5.setStyleSheet("background-color : white")
+
+        buttonFolderRoot = QPushButton('^ ^ Folder Name ^ ^', self)
+        buttonFolderRoot.move(50,185)
+        buttonFolderRoot.setStyleSheet("background-color : white")
 
         buttonInstructions = QPushButton('?', self)
         buttonInstructions.move(455,655)
@@ -160,74 +167,95 @@ class App(QWidget):
         buttonInstructions.resize(30,30)
         #
 
+        # Connect buttons to functions #
         # connect button1 to function on_click3 // set location of apk file
         button1.clicked.connect(self.on_click3)
         button1.show()
-
         # connect button4 to function on_click4 // set name of .apk file
         button4.clicked.connect(self.on_click4)
         button4.show()
-
         # connect button5 to function on_click5 // set location of UnrealtoAndroid.txt
-        button4.clicked.connect(self.on_click4)
-        button4.show()
-
+        button5.clicked.connect(self.on_click5)
+        button5.show()
         # connect button(instructionWindow) to function show_new_window
         buttonInstructions.clicked.connect(self.show_new_window)
         buttonInstructions.show()
+        # connect buttonFolderName to function on_clickFolderName
+        buttonFolderRoot.clicked.connect(self.on_clickFolderRoot)
+        buttonFolderRoot.show()
 
         self.show()
         app.setStyle('Oxygen')
 
-
+    # Define functions # 
+    # Delete defined android folder
     @pyqtSlot()
     def on_click1(self):
         import shutil
         import os
         dir = "Android_ETC2"
-        location = apkFileLocation
-        path = os.path.join(location, dir)
+        location = apkFolderRoot
+        path = apkFolderRoot
+        #path = os.path.join(location, dir)
         shutil.rmtree(path)
 
-    # Execute adb command 'apk install'
+    # Execute adb command 'apk install' // Push apk to android
     @pyqtSlot()
     def on_click2(self):
         import subprocess
         subprocess.call(
-            "adb install" + " -r " + apkFileLocation + apkName,
+            "adb install" + " -r " + apkFolderRoot + "/" + apkName,
             shell=True)
 
     # Enter Location of apk file
     @pyqtSlot()
     def on_click3(self):
         textboxValue = self.textbox.text()
-        QMessageBox.question(self, 'location of apk file set', "" + textboxValue, QMessageBox.Ok, QMessageBox.Ok)
-        self.textbox.setText("")
-        global apkFileLocation
-        apkFileLocation = textboxValue
-
-        # read and write file
-        #file = open('C:/Users/progr/Desktop/WriteToThisFile.txt', 'w') 
-        #with open('C:/Users/progr/Desktop/WriteToThisFile.txt','w') as writer:
-                #writer.write(textboxValue)
-    
+        QMessageBox.question(self, 'apk file location set', "" + textboxValue, QMessageBox.Ok)
+        self.textbox.setText(textboxValue)
+        global apkFolderRoot
+        apkFolderRoot = textboxValue
     
     # Enter name of apk file // set global variable 'apkName'
     @pyqtSlot()
     def on_click4(self): 
+        global Forwardslash
+        Forwardslash = "/"
         textboxValue = self.textbox1.text()
-        QMessageBox.question(self, 'apk name set', "" + textboxValue, QMessageBox.Close,)
-        self.textbox1.setText("")
+        QMessageBox.question(self, 'apk name set', "" + textboxValue, QMessageBox.Ok)
+        self.textbox1.setText(textboxValue)
         global apkName
         apkName = textboxValue
 
-    # Show new window detailing program instructions
+    # Enter location of UnrealtoAndroid.txt // set global variable UnrealtoAndroid
+    @pyqtSlot()
+    def on_click5(self): 
+        textboxValue = self.textbox2.text()
+        self.textbox2.setText(textboxValue)
+        # write location of apk file to UnrealtoAndroid.txt
+        file = open('C:/Users/progr/Desktop/UnrealtoAndroid.txt', 'a')
+        with open('C:/Users/progr/Desktop/UnrealtoAndroid.txt','a') as writer:
+            global ListofApkValues
+            ListofApkValues = apkFolderRoot + Forwardslash, apkName
+            writer.write(str(ListofApkValues))
+            file.close()
+
+    # Enter apk folder root
+    @pyqtSlot()
+    def on_clickFolderRoot(self):
+        textboxValue = self.textboxFolderRoot.text()
+        QMessageBox.question(self, 'apk folder root', "" + textboxValue, QMessageBox.Ok)
+        self.textboxFolderRoot.setText(textboxValue)
+        global apkFolderRoot
+        apkFolderRoot = textboxValue
+
+    # Show new window detailing script instructions
     @pyqtSlot()
     def show_new_window(self): 
         msg = QMessageBox()
         msg.setText("        Welcome to 'UnrealtoAndroid'")
         msg.setWindowTitle("                               FAQs")
-        msg.setDetailedText("What is UnrealtoAndroid? - - \nUnrealtoAndroid is a Python script designed to increase the efficiency of creating apk files for Android devices.\nHow does it work? - - \n")
+        msg.setDetailedText("What is UnrealtoAndroid? - - \nUnrealtoAndroid is a Python script designed to increase the efficiency of creating apk files for Android devices.")
         msg.setStandardButtons(QMessageBox.Close)
         msg.addButton(QPushButton('Ok'), msg.ActionRole)
         msg.setWindowIcon(QIcon('C:/Users/progr/Creative Cloud Files/Images/Textures/android question mark'))
@@ -238,7 +266,7 @@ class App(QWidget):
 
 
 
-# app end
+# app end #
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = App()
