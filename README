@@ -7,3 +7,8 @@ features added to v1.2 :
 - main window includes black borders 
 - trash icon and .apk download icon 
 - question icon leads to information window detailing FAQs related to script
+
+# UnrealtoAndroid v1.3
+- trash button deletes folder defined in 'Folder Root'
+- changed text on buttons
+- removed message boxes when typing paths
